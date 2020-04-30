@@ -28,8 +28,8 @@
     self.navigationItem.title = @"";
 
     CGFloat footerHeight = 46;
-    _webView = [UIWebView new];
-    _webView.delegate = self;
+    _webView = [WKWebView new];
+    _webView.navigationDelegate = self;
     NSString *section = _article.topicName ? [NSString stringWithFormat:@"%@ / %@", NSLocalizedStringFromTableInBundle(@"Knowledge Base", @"UserVoice", [UserVoice bundle], nil), _article.topicName] : NSLocalizedStringFromTableInBundle(@"Knowledge base", @"UserVoice", [UserVoice bundle], nil);
     NSString *linkColor;
     if (IOS7) {
@@ -88,12 +88,13 @@
     [self.view bringSubviewToFront:bg];
 }
 
-
-- (BOOL)webView:(UIWebView *)view shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
-    if (navigationType == UIWebViewNavigationTypeLinkClicked) {
-        return ![[UIApplication sharedApplication] openURL:request.URL];
+- (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler
+{
+    BOOL shouldOpen = YES;
+    if (navigationAction.navigationType == WKNavigationTypeLinkActivated) {
+        shouldOpen = ![[UIApplication sharedApplication] openURL:navigationAction.request.URL];
     }
-    return YES;
+    decisionHandler(shouldOpen ? WKNavigationActionPolicyAllow : WKNavigationActionPolicyCancel);
 }
 
 - (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex {
