@@ -186,6 +186,21 @@ static const char encodingTable[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopq
         [navbarTitleTextAttributes setObject:styles.navigationBarFont forKey:NSFontAttributeName];
     }
     [navigationController.navigationBar setTitleTextAttributes:navbarTitleTextAttributes];
+    
+    if (@available(iOS 15.0, *)) {
+        UINavigationBarAppearance *navBarAppearance = [[UINavigationBarAppearance alloc] init];
+        if (styles.navigationBarTranslucency) {
+            [navBarAppearance configureWithTransparentBackground];
+        }
+        else {
+            [navBarAppearance configureWithOpaqueBackground];
+        }
+        navBarAppearance.backgroundColor = styles.navigationBarBackgroundColor;
+        navBarAppearance.titleTextAttributes = navbarTitleTextAttributes;
+        
+        navigationController.navigationBar.standardAppearance = navBarAppearance;
+        navigationController.navigationBar.scrollEdgeAppearance = navBarAppearance;
+    }
 }
 
 + (NSString *)formatInteger:(NSInteger)number {
