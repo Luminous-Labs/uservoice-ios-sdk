@@ -58,10 +58,12 @@
 - (CGRect)contentFrame {
     CGRect barFrame = CGRectZero;
     barFrame = self.navigationController.navigationBar.frame;
-    CGRect appFrame = [UIScreen mainScreen].applicationFrame;
+    // applicationFrame returns a NaN height in UIScene-based apps; the nav bar's bottom edge already
+    // accounts for the status bar, so measure the remaining height from the screen instead.
+    CGRect screenBounds = [UIScreen mainScreen].bounds;
     CGFloat yStart = barFrame.origin.y + barFrame.size.height;
 
-    return CGRectMake(0, yStart, appFrame.size.width, appFrame.size.height - barFrame.size.height);
+    return CGRectMake(0, yStart, screenBounds.size.width, screenBounds.size.height - yStart);
 }
 
 - (void)showActivityIndicator {
