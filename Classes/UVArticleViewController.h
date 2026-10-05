@@ -10,7 +10,7 @@
 #import "UVBaseViewController.h"
 #import "UVArticle.h"
 
-@interface UVArticleViewController : UVBaseViewController<UIActionSheetDelegate, WKNavigationDelegate>
+@interface UVArticleViewController : UVBaseViewController<WKNavigationDelegate>
 
 @property (nonatomic, retain) UVArticle *article;
 @property (nonatomic, retain) WKWebView *webView;
