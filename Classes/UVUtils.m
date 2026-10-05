@@ -287,5 +287,28 @@ static const char encodingTable[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopq
     return sizeWithFont;
 }
 
++ (void)presentAlertController:(UIAlertController *)alertController {
+    UIWindow *window = nil;
+    for (UIScene *scene in [UIApplication sharedApplication].connectedScenes) {
+        if (![scene isKindOfClass:[UIWindowScene class]]) {
+            continue;
+        }
+        UIWindow *keyWindow = ((UIWindowScene *)scene).keyWindow;
+        if (scene.activationState == UISceneActivationStateForegroundActive && keyWindow) {
+            window = keyWindow;
+            break;
+        }
+        if (!window) {
+            window = keyWindow;
+        }
+    }
+
+    UIViewController *presenter = window.rootViewController;
+    while (presenter.presentedViewController && !presenter.presentedViewController.isBeingDismissed) {
+        presenter = presenter.presentedViewController;
+    }
+    [presenter presentViewController:alertController animated:YES completion:nil];
+}
+
 
 @end
